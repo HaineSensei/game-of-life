@@ -136,9 +136,9 @@ fn main() {
         d.sample(&mut rand::rng())
     }
     let (x,y) = termion::terminal_size().unwrap();
-    let mut bool_grid = Grid::new(x-1, y-1, &d);
+    let mut bool_grid = Grid::new(x, y, &d);
     loop {
-        let formatted = format!("\x1B[2J\x1B[0;0H{}", bool_grid);
+        let formatted = format!("\x1B[{}A\x1B[{}D{}",y-1,x-1, bool_grid);
         let stdout = std::io::stdout();
     stdout.lock().write_all(formatted.as_bytes()).unwrap();
         bool_grid = update(bool_grid,&d);
