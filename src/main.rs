@@ -2,6 +2,8 @@ use rand::distr::{Bernoulli, Distribution};
 use termion;
 use std::{convert::identity, fmt, io::Write};
 use itertools::Itertools;
+use std::thread;
+use std::time::Duration;
 
 #[derive(Clone)]
 struct Grid<T> {
@@ -140,7 +142,8 @@ fn main() {
     loop {
         let formatted = format!("\x1B[{}A\x1B[{}D{}",y-1,x-1, bool_grid);
         let stdout = std::io::stdout();
-    stdout.lock().write_all(formatted.as_bytes()).unwrap();
+        stdout.lock().write_all(formatted.as_bytes()).unwrap();
+        thread::sleep(Duration::from_millis(10));
         bool_grid = update(bool_grid,&d);
     }
 }
