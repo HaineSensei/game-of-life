@@ -1,5 +1,7 @@
-use rand::distr::{Bernoulli, Distribution};
+use rand::prelude::*;
+use rand::distributions::{Bernoulli, Distribution};
 use termion;
+use std::iter::FromIterator;
 use std::{convert::identity, fmt, io::Write};
 use itertools::Itertools;
 use std::thread;
@@ -23,7 +25,7 @@ impl<T> Grid<T> {
             width,
             height,
             cells: (0..width*height)
-                .map(|_|d.sample(&mut rand::rng()))
+                .map(|_|d.sample(&mut rand::thread_rng()))
                 .collect()
         }
     }
@@ -57,7 +59,7 @@ impl<T: Copy> Grid<T> {
                 if 0 < x && x< width-1 && 0 < y && y < height-1 {
                     *interior.get(x-1,y-1).unwrap()
                 } else {
-                    d.sample(&mut rand::rng())
+                    d.sample(&mut rand::thread_rng())
                 }
             }))
             .collect()
@@ -135,7 +137,7 @@ fn main() {
     let d = Bernoulli::new(0.5).unwrap();
     // random boolean generator ;)
     fn rbg(d: &impl Distribution<bool>) -> bool {
-        d.sample(&mut rand::rng())
+        d.sample(&mut rand::thread_rng())
     }
     let (x,y) = termion::terminal_size().unwrap();
     let mut bool_grid = Grid::new(x, y, &d);
