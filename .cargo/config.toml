@@ -1,0 +1,2 @@
+[target.i586-unknown-linux-musl]
+linker = "i486-linux-musl-gcc"
