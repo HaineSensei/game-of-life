@@ -133,13 +133,18 @@ fn update(grid: Grid<bool>,d: &impl Distribution<bool>) -> Grid<bool> {
 
 fn main() {
     let d = Bernoulli::new(0.5).unwrap();
-    // random boolean generator ;)
     fn rbg(d: &impl Distribution<bool>) -> bool {
         d.sample(&mut rand::rng())
     }
-    let (x,y) = termion::terminal_size().unwrap();
+    let (mut x, mut y) = termion::terminal_size().unwrap();
     let mut bool_grid = Grid::new(x, y, &d);
     loop {
+        let (new_x, new_y) = termion::terminal_size().unwrap();
+        if (new_x, new_y) != (x, y) {
+            x = new_x;
+            y = new_y;
+            bool_grid = Grid::new(x, y, &d);
+        }
         let formatted = format!("\x1B[{}A\x1B[{}D{}",y-1,x-1, bool_grid);
         let stdout = std::io::stdout();
         stdout.lock().write_all(formatted.as_bytes()).unwrap();
